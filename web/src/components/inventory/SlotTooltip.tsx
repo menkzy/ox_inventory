@@ -5,8 +5,8 @@ import { Items } from '../../store/items';
 import { Locale } from '../../store/locale';
 import ReactMarkdown from 'react-markdown';
 import { useAppSelector } from '../../store';
-import ClockIcon from '../utils/icons/ClockIcon';
 import { getItemUrl } from '../../helpers';
+import ClockIcon from '../utils/icons/ClockIcon';
 
 const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ item, inventory }) => {
   const additionalMetadata = useAppSelector((state) => state.inventory.additionalMetadata);
@@ -81,11 +81,11 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
                   {Locale.ui_tint}: {item.metadata.weapontint}
                 </p>
               )}
-              {additionalMetadata.map((data: {metadata: string, value: string}, index: number) => (
+              {Object.keys(additionalMetadata).map((data: string, index: number) => (
                 <Fragment key={`metadata-${index}`}>
-                  {item.metadata && item.metadata[data.metadata] && (
+                  {item.metadata && item.metadata[data] && (
                     <p>
-                      {data.value}: {item.metadata[data.metadata]}
+                      {additionalMetadata[data]}: {item.metadata[data]}
                     </p>
                   )}
                 </Fragment>

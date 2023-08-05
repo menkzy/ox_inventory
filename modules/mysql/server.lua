@@ -159,18 +159,6 @@ function db.loadTrunk(id)
     return MySQL.prepare.await(Query.SELECT_TRUNK, { id })
 end
 
-local function countRows(rows)
-    if type(rows) ~= 'table' then return rows end
-
-    local n = 0
-
-    for i = 1, #rows do
-        if rows[i] == 1 then n += 1 end
-    end
-
-    return n
-end
-
 function db.saveInventories(players, trunks, gloveboxes, stashes)
     local numPlayer, numTrunk, numGlove, numStash = #players, #trunks, #gloveboxes, #stashes
     local total = numPlayer + numTrunk + numGlove + numStash
@@ -185,8 +173,8 @@ function db.saveInventories(players, trunks, gloveboxes, stashes)
         local p = promise.new()
         promises[#promises + 1] = p
 
-        MySQL.prepare(Query.UPDATE_PLAYER, players, function(resp)
-            shared.info(('Saved %s/%s players'):format(countRows(resp), numPlayer))
+        MySQL.prepare(Query.UPDATE_PLAYER, players, function(affectedRows)
+            shared.info(('Saved %s/%s players'):format(affectedRows, numPlayer))
             p:resolve()
         end)
     end
@@ -195,8 +183,8 @@ function db.saveInventories(players, trunks, gloveboxes, stashes)
         local p = promise.new()
         promises[#promises + 1] = p
 
-        MySQL.prepare(Query.UPDATE_TRUNK, trunks, function(resp)
-            shared.info(('Saved %s/%s trunks'):format(countRows(resp), numTrunk))
+        MySQL.prepare(Query.UPDATE_TRUNK, trunks, function(affectedRows)
+            shared.info(('Saved %s/%s trunks'):format(affectedRows, numTrunk))
             p:resolve()
         end)
     end
@@ -205,8 +193,8 @@ function db.saveInventories(players, trunks, gloveboxes, stashes)
         local p = promise.new()
         promises[#promises + 1] = p
 
-        MySQL.prepare(Query.UPDATE_GLOVEBOX, gloveboxes, function(resp)
-            shared.info(('Saved %s/%s gloveboxes'):format(countRows(resp), numGlove))
+        MySQL.prepare(Query.UPDATE_GLOVEBOX, gloveboxes, function(affectedRows)
+            shared.info(('Saved %s/%s gloveboxes'):format(affectedRows, numGlove))
             p:resolve()
         end)
     end
@@ -215,8 +203,8 @@ function db.saveInventories(players, trunks, gloveboxes, stashes)
         local p = promise.new()
         promises[#promises + 1] = p
 
-        MySQL.prepare(Query.UPDATE_STASH, stashes, function(resp)
-            shared.info(('Saved %s/%s stashes'):format(countRows(resp), numStash))
+        MySQL.prepare(Query.UPDATE_STASH, stashes, function(affectedRows)
+            shared.info(('Saved %s/%s stashes'):format(affectedRows, numStash))
             p:resolve()
         end)
     end
