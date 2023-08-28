@@ -94,7 +94,7 @@ end
 
 ---@param source number
 ---@param invType string
----@param data string|number|table
+---@param data? string|number|table
 ---@param ignoreSecurityChecks boolean?
 ---@return boolean|table|nil
 ---@return table?
@@ -104,7 +104,12 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 	local left = Inventory(source) --[[@as OxInventory]]
 	local right, closestCoords
 
-	Inventory.CloseAll(left, (invType == 'drop' or invType == 'container' or not invType) and source)
+    left:closeInventory(true)
+	Inventory.CloseAll(left, source)
+
+    if invType == 'player' and data == source then
+        data = nil
+    end
 
 	if data then
 		if invType == 'stash' then
@@ -162,6 +167,8 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 
 		if not TriggerEventHooks('openInventory', hookPayload) then return end
 
+        if left == right then return end
+
 		if right.player then
 			if right.open then return end
 
@@ -217,7 +224,7 @@ end)
 ---@param invType string
 ---@param data string|number|table
 exports('forceOpenInventory', function(playerId, invType, data)
-	local left, right = openInventory(playerId, invType, data)
+	local left, right = openInventory(playerId, invType, data, true)
 
 	if left and right then
 		TriggerClientEvent('ox_inventory:forceOpenInventory', playerId, left, right)

@@ -28,9 +28,9 @@ end
 ---Close a player's inventory.
 ---@param noEvent? boolean
 function OxInventory:closeInventory(noEvent)
-	if not self.player then return end
+	if not self.player or not self.open then return end
 
-	local inv = self.open and Inventory(self.open)
+	local inv = Inventory(self.open)
 
 	if not inv then return end
 
@@ -210,7 +210,7 @@ setmetatable(Inventory, {
 		if not inv then
 			return self
 		elseif type(inv) == 'table' then
-			if inv.items then return inv end
+			if inv.__index then return inv end
 
 			return not inv.owner and Inventories[inv.id] or loadInventoryData(inv, player)
 		end
@@ -287,7 +287,9 @@ function Inventory.CloseAll(inv, ignoreId)
 	for playerId in pairs(inv.openedBy) do
 		local playerInv = Inventory(playerId)
 
-		if playerInv and (not ignoreId or playerId ~= ignoreId) then playerInv:closeInventory() end
+		if playerInv and playerId ~= ignoreId then
+            playerInv:closeInventory()
+        end
 	end
 end
 
@@ -457,6 +459,10 @@ local function hasActiveInventory(playerId, owner)
 	local activePlayer = activeIdentifiers[owner]
 
 	if activePlayer then
+        if activePlayer == playerId then
+            error('attempted to load active player\'s inventory a secondary time', 0)
+        end
+
 		local inventory = Inventory(activePlayer)
 
 		if inventory then
@@ -581,7 +587,7 @@ function Inventory.Create(id, label, invType, slots, weight, maxWeight, owner, i
 	end
 
 	if not items then
-		self.items, self.weight = Inventory.Load(self.dbId or self.id, invType, owner)
+		self.items, self.weight = Inventory.Load(self.dbId or self.id, invType, owner, self.datastore)
 	elseif weight == 0 and next(items) then
 		self.weight = Inventory.CalculateWeight(items)
 	end
@@ -610,6 +616,10 @@ function Inventory.Remove(inv)
                     target:closeInventory()
                 end
             end
+        end
+
+        if not inv.datastore and inv.changed then
+            Inventory.Save(inv)
         end
 
 		Inventories[inv.id] = nil
@@ -657,22 +667,34 @@ exports('UpdateVehicle', Inventory.UpdateVehicle)
 function Inventory.Save(inv)
 	inv = Inventory(inv) --[[@as OxInventory]]
 
-	if inv then
-		local items = json.encode(minimal(inv))
-		inv.changed = false
+	if not inv or inv.datastore then return end
 
-		if inv.player then
-			db.savePlayer(inv.owner, items)
-		else
-			if inv.type == 'trunk' then
-				db.saveTrunk(inv.dbId, items)
-			elseif inv.type == 'glovebox' then
-				db.saveGlovebox(inv.dbId, items)
-			else
-				db.saveStash(inv.owner, inv.dbId, items)
-			end
-		end
-	end
+    local buffer, n = {}, 0
+
+    for k, v in pairs(inv.items) do
+        if not Items.UpdateDurability(inv, v, Items(v.name), nil, os.time()) then
+            n += 1
+            buffer[n] = {
+                name = v.name,
+                count = v.count,
+                slot = k,
+                metadata = next(v.metadata) and v.metadata or nil
+            }
+        end
+    end
+
+    local data = next(buffer) and json.encode(buffer) or nil
+    inv.changed = false
+
+    if inv.player then
+        return shared.framework ~= 'esx' and db.savePlayer(inv.owner, data)
+    elseif inv.type == 'trunk' then
+        return db.saveTrunk(inv.dbId, data)
+    elseif inv.type == 'glovebox' then
+        return db.saveGlovebox(inv.dbId, data)
+    end
+
+    return db.saveStash(inv.owner, inv.dbId, data)
 end
 
 local function randomItem(loot, items, size)
@@ -742,7 +764,8 @@ end
 ---@param id string|number
 ---@param invType string
 ---@param owner string | number | boolean
-function Inventory.Load(id, invType, owner)
+---@param datastore? boolean
+function Inventory.Load(id, invType, owner, datastore)
 	local result
 
 	if id and invType then
@@ -758,7 +781,7 @@ function Inventory.Load(id, invType, owner)
 					return generateItems(id, 'vehicle')
                 end
 			else result = result[invType] end
-		else
+		elseif not datastore then
 			result = db.loadStash(owner or '', id)
 		end
 	end
@@ -1410,14 +1433,11 @@ end
 
 local function CustomDrop(prefix, items, coords, slots, maxWeight, instance, model)
 	local dropId = generateInvId()
-	local inventory = Inventory.Create(dropId, ('%s %s'):format(prefix, dropId:gsub('%D', '')), 'drop', slots or shared.playerslots, 0, maxWeight or shared.playerweight, false)
+	local inventory = Inventory.Create(dropId, ('%s %s'):format(prefix, dropId:gsub('%D', '')), 'drop', slots or shared.playerslots, 0, maxWeight or shared.playerweight, false, {})
 
 	if not inventory then return end
 
-	local items, weight = generateItems(inventory, 'drop', items)
-
-	inventory.items = items
-	inventory.weight = weight
+	inventory.items, inventory.weight = generateItems(inventory, 'drop', items)
 	inventory.coords = coords
 	Inventory.Drops[dropId] = {
 		coords = inventory.coords,
@@ -1426,6 +1446,8 @@ local function CustomDrop(prefix, items, coords, slots, maxWeight, instance, mod
 	}
 
 	TriggerClientEvent('ox_inventory:createDrop', -1, dropId, Inventory.Drops[dropId])
+
+    return dropId
 end
 
 AddEventHandler('ox_inventory:customDrop', CustomDrop)
@@ -2113,7 +2135,6 @@ function Inventory.GetSlotsWithItem(inv, itemName, metadata, strict)
 	local response = {}
 	local n = 0
 	local tablematch = strict and table.matches or table.contains
-	local ostime = os.time()
 
 	for _, slotData in pairs(inventory.items) do
 		if slotData and slotData.name == item.name and (not metadata or tablematch(slotData.metadata, metadata)) then
@@ -2266,7 +2287,7 @@ end
 
 AddEventHandler('playerDropped', function()
 	if GetNumPlayerIndices() == 0 then
-		Inventory.SaveInventories(true, true)
+		Inventory.SaveInventories(false, true)
 	end
 end)
 
