@@ -1,8 +1,8 @@
-$mainColor: #16161aef;
+$mainColor: #0000005b;
 $textColor: #c1c2c5;
 $mainFont: Roboto;
 
-$seconaryColor: #16161aef;
+$secondaryColor: #0000005b;
 $secondaryColorLight: #16161aef;
 $secondaryColorDark: #16161aef;
 
@@ -175,7 +175,7 @@ button:active {
     border: solid 0.5px;
     border-color: #c1c2c55a;
     color: #fff;
-    background-color: $seconaryColor;
+    background-color: $secondaryColor;
     &:focus-within {
       background-color: $secondaryColorDark;
     }
@@ -494,7 +494,7 @@ button:active {
 .item-notification-action-box {
   width: 100%;
   color: $textColor;
-  background-color: $seconaryColor;
+  background-color: $secondaryColor;
   text-transform: uppercase;
   text-align: center;
   border-top-left-radius: 0.25vh;

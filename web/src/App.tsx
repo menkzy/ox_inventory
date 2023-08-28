@@ -48,13 +48,7 @@ debugData([
             count: 1,
             metadata: { description: 'Generic item description', durability: 90, },
           },
-          { slot: 5, name: 'water', weight: 100, count: 1 },
-          {
-            slot: 6, name: 'backwoods', weight: 100, count: 1, metadata: {
-              label: 'Russian Cream',
-              imageurl: "https://i.imgur.com/2xHhTTz.png"
-            }
-          },
+          { slot: 5, name: 'money', weight: 100, count: 1 },
         ],
       },
       rightInventory: {

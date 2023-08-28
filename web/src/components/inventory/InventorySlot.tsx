@@ -132,22 +132,34 @@ const InventorySlot: React.FC<SlotProps> = ({ inventory, item }) => {
           opacity: isDragging ? 0.4 : 1.0,
           backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
           border: isOver ? '1px solid rgba(37,39,43,0.4)' : '',
+          zIndex: isDragging ? 1000 : undefined,
         }}
       >
         {isSlotWithItem(item) && (
           <div className="item-slot-wrapper">
             <div className="item-slot-header-wrapper">
               <div className="item-slot-info-wrapper">
-                {item.count > 0 && <p>{item.count ? item.count.toLocaleString('en-us') : ''}</p>}
+                {item.count > 0 && <p>{item.count ? item.count.toLocaleString('en-us') : ''}x</p>}
                 {item.weight > 0 && (
                 <p>
-                  {item.weight > 0
+                  {item.weight > 1
                     ? `${(item.weight / 100).toLocaleString('en-us', {
-                        minimumFractionDigits: 2,
+                        minimumFractionDigits: 0,
                       })}`
                     : ''}
-                </p>
+                KG</p>
                 )}
+               <span style={{
+                opacity: 0.1,
+                fontSize: 70,
+                position: 'absolute',
+                width: '100%',
+                textAlign: 'center',
+                height: '100%',
+                top: '10%',
+                left: '0%',
+                zIndex: 0.02,
+              }}>{item.slot}</span>
               </div>
             </div>
             <div>
@@ -165,6 +177,7 @@ const InventorySlot: React.FC<SlotProps> = ({ inventory, item }) => {
                           imageRendering: '-webkit-optimize-contrast',
                           height: 'auto',
                           width: '2vh',
+                          zIndex: 9999999,
                           backfaceVisibility: 'hidden',
                           transform: 'translateZ(0)',
                         }}
