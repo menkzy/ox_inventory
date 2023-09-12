@@ -161,13 +161,10 @@ end
 
 function db.saveInventories(players, trunks, gloveboxes, stashes)
     local numPlayer, numTrunk, numGlove, numStash = #players, #trunks, #gloveboxes, #stashes
-    local total = numPlayer + numTrunk + numGlove + numStash
-    local promises
+    local promises = {}
+    local start = os.nanotime()
 
-    if total > 0 then
-        promises = {}
-        shared.info(('Saving %s inventories to the database'):format(total))
-    end
+    shared.info(('Saving %s inventories to the database'):format(total))
 
     if numPlayer > 0 then
         local p = promise.new()
@@ -209,10 +206,8 @@ function db.saveInventories(players, trunks, gloveboxes, stashes)
         end)
     end
 
-    if promises then
-        -- All queries must run asynchronously on resource stop, so we'll await multiple promises instead.
-        Citizen.Await(promise.all(promises))
-    end
+    -- All queries must run asynchronously on resource stop, so we'll await multiple promises instead.
+    Citizen.Await(promise.all(promises))
 end
 
 return db
