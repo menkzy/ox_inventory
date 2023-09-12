@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import { useAppSelector } from '../../store';
 import { getItemUrl } from '../../helpers';
 import ClockIcon from '../utils/icons/ClockIcon';
+import Chip from '@mui/material/Chip';
 
 const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ item, inventory }) => {
   const additionalMetadata = useAppSelector((state) => state.inventory.additionalMetadata);
@@ -22,14 +23,14 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
     <>
       {!itemData ? (
         <div className="tooltip-wrapper">
-          <div className="tooltip-header-wrapper">
+          <div className="tooltip-title-wrapper">
             <p>{item.name}</p>
           </div>
           <Divider />
         </div>
       ) : (
         <div className="tooltip-wrapper">
-          <div className="tooltip-header-wrapper">
+          <div className="tooltip-title-wrapper">
             <p>{item.metadata?.label || itemData.label || item.name}</p>
             {inventory.type === 'crafting' ? (
               <div className="tooltip-crafting-duration">
@@ -46,30 +47,31 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
               <ReactMarkdown className="tooltip-markdown">{description}</ReactMarkdown>
             </div>
           )}
+          <Divider>METADATA</Divider>
           {inventory.type !== 'crafting' ? (
             <>
               {item.durability !== undefined && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ui_durability}: {Math.trunc(item.durability)}
                 </p>
               )}
               {item.metadata?.ammo !== undefined && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ui_ammo}: {item.metadata.ammo}
                 </p>
               )}
               {ammoName && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ammo_type}: {ammoName}
                 </p>
               )}
               {item.metadata?.serial && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ui_serial}: {item.metadata.serial}
                 </p>
               )}
               {item.metadata?.components && item.metadata?.components[0] && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ui_components}:{' '}
                   {(item.metadata?.components).map((component: string, index: number, array: []) =>
                     index + 1 === array.length ? Items[component]?.label : Items[component]?.label + ', '
@@ -77,16 +79,14 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
                 </p>
               )}
               {item.metadata?.weapontint && (
-                <p>
+                <p className="tooltip-metadata">
                   {Locale.ui_tint}: {item.metadata.weapontint}
                 </p>
               )}
               {Object.keys(additionalMetadata).map((data: string, index: number) => (
                 <Fragment key={`metadata-${index}`}>
                   {item.metadata && item.metadata[data] && (
-                    <p>
-                      {additionalMetadata[data]}: {item.metadata[data]}
-                    </p>
+                    <p className="tooltip-metadata-additional">{item.metadata[data]}</p>
                   )}
                 </Fragment>
               ))}

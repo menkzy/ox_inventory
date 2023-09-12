@@ -6,11 +6,13 @@ $secondaryColor: #0000005b;
 $secondaryColorLight: #16161aef;
 $secondaryColorDark: #16161aef;
 
-$gridCols: 6;
-$gridRows: 6;
-$gridCols-right: 4;
+$mainTextColor: rgb(255, 215, 0);
+
+$gridCols: 5;
+$gridRows: 5;
+$gridCols-right: 5;
 $gridRows-right: 5;
-$gridSize: 10.2vh;
+$gridSize: 10vh;
 $gridGap: 0.5rem;
 
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
@@ -414,6 +416,15 @@ button:active {
   }
 }
 
+.tooltip-metadata-splitter {
+  border-top: 1px solid rgb(73, 73, 73);
+}
+
+.tooltip-metadata-additional {
+  font-style: italic;
+  font-size: 13px;
+}
+
 .tooltip-header-wrapper {
   display: flex;
   flex-direction: row;
@@ -421,7 +432,19 @@ button:active {
   align-items: center;
   p {
     font-size: 15px;
-    font-weight: 400;
+    font-weight: 600;
+  }
+}
+
+.tooltip-title-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    font-size: 15px;
+    font-weight: 600;
+    color: $mainTextColor !important;
   }
 }
 

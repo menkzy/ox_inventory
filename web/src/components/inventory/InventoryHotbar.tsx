@@ -36,17 +36,32 @@ const InventoryHotbar: React.FC = () => {
             }}
             key={`hotbar-${item.slot}`}
           >
+            <span
+              style={{
+                opacity: 0.1,
+                fontSize: 70,
+                position: 'absolute',
+                width: '100%',
+                textAlign: 'center',
+                height: '100%',
+                top: '5%',
+                left: '0%',
+                zIndex: 0.02,
+              }}
+            >
+              {item.slot}
+            </span>
             {isSlotWithItem(item) && (
               <div className="item-slot-wrapper">
                 <div className="hotbar-slot-header-wrapper">
                   <div className="item-slot-info-wrapper">
-                      <p>{item.count ? item.count.toLocaleString('en-us') : ''}</p>
+                    <p>{item.count ? item.count.toLocaleString('en-us') : ''}</p>
                     <p>
-                    {item.weight > 0
-                    ? `${(item.weight / 100).toLocaleString('en-us', {
-                        minimumFractionDigits: 2,
-                      })}`
-                    : ''}
+                      {item.weight > 0
+                        ? `${(item.weight / 100).toLocaleString('en-us', {
+                            minimumFractionDigits: 2,
+                          })}`
+                        : ''}
                     </p>
                   </div>
                 </div>
@@ -55,7 +70,7 @@ const InventoryHotbar: React.FC = () => {
                     <div className="inventory-slot-label-text">
                       {item.metadata?.label ? item.metadata.label : Items[item.name]?.label || item.name}
                     </div>
-                  {item?.durability !== undefined && <WeightBar percent={item.durability} durability />}
+                    {item?.durability !== undefined && <WeightBar percent={item.durability} durability />}
                   </div>
                 </div>
               </div>

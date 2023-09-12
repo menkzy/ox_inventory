@@ -31,7 +31,7 @@ debugData([
             weight: 3000,
             metadata: {
               durability: 100,
-              description: `name: Svetozar Miletic  \n Gender: Male`,
+              description: 'name: Svetozar Miletic  \n Gender: Male',
               ammo: 3,
               mustard: '60%',
               ketchup: '30%',
@@ -44,9 +44,10 @@ debugData([
           {
             slot: 4,
             name: 'water',
+            description: 'Generic item description',
             weight: 100,
             count: 1,
-            metadata: { description: 'Generic item description', durability: 90, },
+            metadata: { meta: 'Generic item description2', durability: 90, type: 'Special', ammo: 3, mustard: '60%', ketchup: '30%', mayo: '10%' },
           },
           { slot: 5, name: 'money', weight: 100, count: 1 },
         ],

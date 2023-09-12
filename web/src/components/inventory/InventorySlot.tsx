@@ -149,17 +149,6 @@ const InventorySlot: React.FC<SlotProps> = ({ inventory, item }) => {
                     : ''}
                 KG</p>
                 )}
-               <span style={{
-                opacity: 0.1,
-                fontSize: 70,
-                position: 'absolute',
-                width: '100%',
-                textAlign: 'center',
-                height: '100%',
-                top: '10%',
-                left: '0%',
-                zIndex: 0.02,
-              }}>{item.slot}</span>
               </div>
             </div>
             <div>

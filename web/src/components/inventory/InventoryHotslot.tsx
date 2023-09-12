@@ -5,24 +5,27 @@ import InventoryContext from './InventoryContext';
 import { getTotalWeight } from '../../helpers';
 import { createPortal } from 'react-dom';
 
-const InventoryHotslot: React.FC<{ inventory: Inventory, direction: 'left' | 'right'}> = ({ inventory, direction }) => {
+const InventoryHotslot: React.FC<{ inventory: Inventory; direction: 'left' | 'right' }> = ({
+  inventory,
+  direction,
+}) => {
   const weight = React.useMemo(
-    () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items)*1000)/1000 : 0),
+    () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items) * 1000) / 1000 : 0),
     [inventory.maxWeight, inventory.items]
   );
-  const hotInv = inventory.items.slice(0,5)
+  const hotInv = inventory.items.slice(0, 5);
   return (
     <>
-        { inventory.type === 'player' && (
-          <>
+      {inventory.type === 'player' && (
+        <>
           <div className="hotslot-wrapper">
-          {hotInv.map((item) => (
-          <InventorySlot key={`${inventory.type}-${inventory.id}-${item.slot}`} item={item} inventory={inventory}/>
-          ))}
+            {hotInv.map((item) => (
+              <InventorySlot key={`${inventory.type}-${inventory.id}-${item.slot}`} item={item} inventory={inventory} />
+            ))}
             {inventory.type === 'player' && createPortal(<InventoryContext />, document.body)}
           </div>
-          </>
-        )}
+        </>
+      )}
     </>
   );
 };
