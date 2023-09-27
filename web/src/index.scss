@@ -6,12 +6,12 @@ $secondaryColor: #0000005b;
 $secondaryColorLight: #16161aef;
 $secondaryColorDark: #16161aef;
 
-$mainTextColor: rgb(255, 215, 0);
+$mainTextColor: rgb(228, 228, 228);
 
 $gridCols: 5;
 $gridRows: 5;
-$gridCols-right: 5;
-$gridRows-right: 5;
+$gridCols-right: 4;
+$gridRows-right: 4;
 $gridSize: 10vh;
 $gridGap: 0.5rem;
 
@@ -21,8 +21,7 @@ $containerSize-right: calc(#{$gridRows-right} * #{$gridSize + 0.22vh} + #{$gridR
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: $mainFont;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
@@ -292,7 +291,7 @@ button:active {
   border-radius: 5px;
   image-rendering: -webkit-optimize-contrast;
   position: relative;
-  background-size: 5.5vh;
+  background-size: 6.5vh;
   color: $textColor;
   border: 1px solid #25272bd5;
 }
@@ -363,12 +362,12 @@ button:active {
   justify-content: space-between;
   width: 100%;
   padding: 5px;
-  gap: 3px;
+  gap: 5px;
   p {
     font-size: 11px;
-    background-color: #28272acb;
-    padding: 5px;
-    border-radius: 1rem;
+    background-color: #242424;
+    padding: 3px;
+    border-radius: 5px;
   }
 }
 

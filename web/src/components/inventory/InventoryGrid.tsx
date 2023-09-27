@@ -16,11 +16,12 @@ const InventoryGrid: React.FC<{ inventory: Inventory, direction: 'left' | 'right
     <>
       <div className="inventory-grid-wrapper">
         <div>
-          <div className="inventory-grid-header-wrapper">
+        <div className="inventory-grid-header-wrapper">
             <p>{inventory.label}</p>
             {inventory.maxWeight && (
-              <p>Current ({(weight / 100).toLocaleString('en-us', { minimumFractionDigits: 0,})}kg)
-                &ndash; Max Weight({(inventory.maxWeight / 100).toLocaleString('en-us', { minimumFractionDigits: 0, })}kg)</p>
+              <p>
+                {weight / 100}/{inventory.maxWeight / 100}
+              </p>
             )}
           </div>
           <WeightBar percent={inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0} />
@@ -28,7 +29,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory, direction: 'left' | 'right
         <div className={direction === 'left' ? 'inventory-grid-container' : 'inventory-grid-container-right'}>
           <>
           {inventory.items.map((item, index) => {
-            if(index < 4 && inventory.type==='player') {
+            if(index < 5 && inventory.type==='player') {
               return ''
             }
             return <InventorySlot key={`${inventory.type}-${inventory.id}-${item.slot}`} item={item} inventory={inventory} />

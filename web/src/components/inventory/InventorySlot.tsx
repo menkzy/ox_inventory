@@ -138,16 +138,16 @@ const InventorySlot: React.FC<SlotProps> = ({ inventory, item }) => {
         {isSlotWithItem(item) && (
           <div className="item-slot-wrapper">
             <div className="item-slot-header-wrapper">
-              <div className="item-slot-info-wrapper">
-                {item.count > 0 && <p>{item.count ? item.count.toLocaleString('en-us') : ''}x</p>}
+            <div className="item-slot-info-wrapper">
+            {item.count > 0 && <p>{item.count ? item.count.toLocaleString('en-us') : ''}</p>}
                 {item.weight > 0 && (
                 <p>
-                  {item.weight > 1
+                  {item.weight > 0
                     ? `${(item.weight / 100).toLocaleString('en-us', {
-                        minimumFractionDigits: 0,
+                        minimumFractionDigits: 2,
                       })}`
                     : ''}
-                KG</p>
+                </p>
                 )}
               </div>
             </div>

@@ -47,7 +47,7 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
               <ReactMarkdown className="tooltip-markdown">{description}</ReactMarkdown>
             </div>
           )}
-          <Divider>METADATA</Divider>
+          <Divider />
           {inventory.type !== 'crafting' ? (
             <>
               {item.durability !== undefined && (
@@ -86,7 +86,9 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
               {Object.keys(additionalMetadata).map((data: string, index: number) => (
                 <Fragment key={`metadata-${index}`}>
                   {item.metadata && item.metadata[data] && (
-                    <p className="tooltip-metadata-additional">{item.metadata[data]}</p>
+                    <p>
+                      {additionalMetadata[data]}: {item.metadata[data]}
+                    </p>
                   )}
                 </Fragment>
               ))}

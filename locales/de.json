@@ -41,7 +41,7 @@
   "interact_prompt": "Drücke [%s]",
   "weapon_unregistered": "%s ist auf niemanden registriert",
   "weapon_registered": "%s (%s) ist registriert auf %s",
-  "weapon_broken": "Diese Waffe ist kaputt",
+  "weapon_broken": "Diese Waffe ist togglebonnett",
   "vehicle_locked": "Das Fahrzeug ist verriegelt",
   "nobody_nearby": "Niemand ist in deiner Nähe",
   "give_amount": "Trage die Anzahl ein die du geben möchtest",
