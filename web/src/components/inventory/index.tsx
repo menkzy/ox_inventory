@@ -2,14 +2,16 @@ import React from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
-import { Fade, Stack } from '@mui/material';
 import { useAppDispatch } from '../../store';
-import { setAdditionalMetadata, setupInventory, refreshSlots, setContextMenu } from '../../store/inventory';
+import { refreshSlots, setAdditionalMetadata, setupInventory } from '../../store/inventory';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
 import RightInventory from './RightInventory';
 import LeftInventory from './LeftInventory';
 import HotslotInventory from './HotslotInventory';
+import { closeContextMenu } from '../../store/contextMenu';
+import { closeTooltip } from '../../store/tooltip';
+import Fade from '../utils/transitions/Fade';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = React.useState(false);
@@ -18,7 +20,8 @@ const Inventory: React.FC = () => {
   useNuiEvent<boolean>('setInventoryVisible', setInventoryVisible);
   useNuiEvent<false>('closeInventory', () => {
     setInventoryVisible(false);
-    dispatch(setContextMenu({ coords: null }));
+    dispatch(closeContextMenu());
+    dispatch(closeTooltip());
   });
   useExitListener(setInventoryVisible);
 

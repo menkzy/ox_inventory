@@ -1,6 +1,5 @@
 import { Inventory, SlotWithItem } from '../../typings';
-import { Fragment, useMemo } from 'react';
-import { Divider } from '@mui/material';
+import React, { Fragment, useMemo } from 'react';
 import { Items } from '../../store/items';
 import { Locale } from '../../store/locale';
 import ReactMarkdown from 'react-markdown';
@@ -9,7 +8,10 @@ import { getItemUrl } from '../../helpers';
 import ClockIcon from '../utils/icons/ClockIcon';
 import Chip from '@mui/material/Chip';
 
-const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ item, inventory }) => {
+const SlotTooltip: React.ForwardRefRenderFunction<
+  HTMLDivElement,
+  { item: SlotWithItem; inventoryType: Inventory['type']; style: React.CSSProperties }
+> = ({ item, inventoryType, style }, ref) => {
   const additionalMetadata = useAppSelector((state) => state.inventory.additionalMetadata);
   const itemData = useMemo(() => Items[item.name], [item]);
   const ingredients = useMemo(() => {
@@ -32,7 +34,7 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
         <div className="tooltip-wrapper">
           <div className="tooltip-title-wrapper">
             <p>{item.metadata?.label || itemData.label || item.name}</p>
-            {inventory.type === 'crafting' ? (
+            {inventoryType === 'crafting' ? (
               <div className="tooltip-crafting-duration">
                 <ClockIcon />
                 <p>{(item.duration !== undefined ? item.duration : 3000) / 1000}s</p>
@@ -119,4 +121,4 @@ const SlotTooltip: React.FC<{ item: SlotWithItem; inventory: Inventory }> = ({ i
   );
 };
 
-export default SlotTooltip;
+export default React.forwardRef(SlotTooltip);

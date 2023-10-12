@@ -2,11 +2,11 @@ import { createSlice, current, isFulfilled, isPending, isRejected, PayloadAction
 import type { RootState } from '.';
 import { Slot, State } from '../typings';
 import {
-  setupInventoryReducer,
+  moveSlotsReducer,
   refreshSlotsReducer,
+  setupInventoryReducer,
   stackSlotsReducer,
   swapSlotsReducer,
-  moveSlotsReducer,
 } from '../reducers';
 
 const initialState: State = {
@@ -87,7 +87,6 @@ export const inventorySlice = createSlice({
 
 export const {
   setAdditionalMetadata,
-  setContextMenu,
   setItemAmount,
   setShiftPressed,
   setupInventory,
